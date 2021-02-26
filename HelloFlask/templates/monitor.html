@@ -1,0 +1,256 @@
+﻿{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <!--<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>-->
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/echarts.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="text-right">
+        <!--<a href="/sys/start" class="btn  btn-sm btn-primary " role="button">启动</a>
+        <a href="/sys/stop" class="btn  btn-sm btn-danger " role="button">停止</a>-->
+        <button id="sysstart" class="btn  btn-sm btn-primary " role="button">启动</button>
+        <button id="sysstop" class="btn  btn-sm btn-danger " role="button">停止</button>
+</div>
+<div id="echartsLine1" style="width: 45%;height: 300px;float: left;margin-top: 20px;margin-left: 20px;"></div>
+<div id="echartsLine2" style="width: 45%;height: 300px;float: left;margin-top: 20px;margin-left: 20px;"></div>
+<div id="echartsLine3" style="width: 50%;height: 300px;float: left;margin-top: 20px;margin-left: 20px;"></div>
+<script type="text/javascript">
+    var cpu = {
+        'used': [],
+        time: []
+    };
+    var memory = {
+        'used': [],
+        time: []
+    };
+    var net = {
+        'rcvd': [],
+        'send': [],
+        time: []
+    };
+    clearInterval(stopCreate);
+
+    //获取后端的cpu 内存 网速数据
+    function getResJson() {
+        $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: '/GetPie',
+        }).done(function (data) {
+            var jsondata = jQuery.parseJSON(data)
+            $.each(jsondata.result, function (i, item) {
+                cpu.time.push(item.time);
+                net.time.push(item.time);
+                memory.time.push(item.time);
+                if (item.pieBox == 'CPU') {
+                    cpu.used.push(item.json.Pvalue);
+                }
+                if (item.pieBox == 'Memory') {
+                    memory.used.push(item.json.Pvalue);
+                }
+                if (item.pieBox == 'IO') {
+                    net.rcvd.push(item.json.Pvalue);
+                    net.send.push(item.json.Fvalue);
+                }
+            });
+            createEcharts();
+        }
+        );
+    }
+    getResJson();
+    var stopCreate = setInterval(getResJson, 1500);
+    function creatNetEcharts() {
+        option = {
+            title: {
+                text: '网络IO'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                },
+            },
+            legend: {
+                data: ['上传', '下载']
+            },
+
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: net.time
+            }],
+            yAxis: [{
+                type: 'value',
+                axisLabel:
+                {
+                    formatter: '{value}K/s'
+                }
+            }],
+            series: [{
+                name: '上传',
+                type: 'line',
+                areaStyle: {},
+                data: net.send
+            }, {
+                name: '下载',
+                type: 'line',
+                areaStyle: {},
+                data: net.rcvd
+            },
+
+            ],
+            backgroundColor: '#FFFFFF',
+            color: ['#BE81F7', '#C8FE2E'],
+            dataZoom: [{
+                start: 0,
+                end: 100,
+                type: 'inside'
+            }, {
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            }],
+        };
+        echartsLineFunc = echarts.init(echartsLine3);
+        echartsLineFunc.setOption(option);
+    };
+
+    function creatCPUEcharts() {
+        option = {
+            title: {
+                text: 'CPU使用记录'
+            },
+
+
+            tooltip: {
+                trigger: 'axis',
+                formatter: "{b}<br/>{a}:{c}%",
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: cpu.time
+            }],
+            yAxis: [{
+                type: 'value',
+                 axisLabel:
+                {
+                    formatter: '{value}%'
+                }
+            }],
+            series: [{
+                name: 'CPU已用',
+                type: 'line',
+                areaStyle: {},
+                data: cpu.used
+            }],
+            color: '#FE2EC8',
+            backgroundColor: '#FFFFFF',
+            dataZoom: [{
+                start: 0,
+                end: 100,
+                type: 'inside'
+            }, {
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            }],
+        };
+        echartsLineFunc = echarts.init(echartsLine1);
+        echartsLineFunc.setOption(option);
+    };
+
+    function creatMemoryEcharts() {
+        option = {
+            title: {
+                text: '内存使用记录'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: "{b}<br/>{a}:{c}%",
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: memory.time
+            }],
+            yAxis: [{
+                type: 'value',
+                axisLabel:
+                {
+                    formatter: '{value}%'
+                }
+            }],
+            series: [{
+                name: '内存已用',
+                type: 'line',
+                areaStyle: {},
+                data: memory.used
+            },
+
+            ],
+            color: '#00FF00',
+            backgroundColor: '#FFFFFF',
+            dataZoom: [{
+                start: 0,
+                end: 100,
+                type: 'inside',
+            }, {
+                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+            }],
+
+        };
+        echartsLineFunc = echarts.init(echartsLine2);
+        echartsLineFunc.setOption(option);
+    };
+
+    function createEcharts() {
+        creatNetEcharts();
+        creatCPUEcharts();
+        creatMemoryEcharts();
+    };
+    $('#sysstart').click(function () {
+        alert('正在启动中，请稍后！\n 启动成功后会有提示！');
+        $.ajax({
+            url: '/sys/start',
+            type: 'get',
+            dataType: 'text',
+            async: false,
+            timeout: 50000,
+        }).done(function (data) {
+            if (data == 'ok')
+                alert('启动成功！');
+
+        }).fail(function () {
+            alert('服务器超时，请重试！');
+        });
+    });
+    $('#sysstop').click(function () {
+        alert('正在停止中，请稍后！\n 停止成功后会有提示！');
+        $.ajax({
+            url: '/sys/stop',
+            type: 'get',
+            dataType: 'text',
+        }).done(function (data) {
+            if (data == 'ok')
+                alert('停止成功！');
+
+        }).fail(function () {
+            alert('服务器超时，请重试！');
+        });
+    });
+</script>
+{% endblock %}

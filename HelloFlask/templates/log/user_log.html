@@ -1,0 +1,142 @@
+﻿{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+	<link rel="stylesheet" type="text/css" href="static/jeDate/skin/jedate.css">
+{% endblock %}
+
+{% block body %}
+<div style="width: 600px;height: 100px;position: fixed;top: 20%;left: 50%;margin-left: -300px;margin-top: -50px;">
+	<form id="form1">
+		<label>
+			开始时间
+			<input type="text" name="start" id="startTime" value="">
+		</label>
+		<label>
+			结束时间
+			<input type="text" name="end" id="endTime" value="">
+		</label>
+		<input class="btn btn-primary" onclick="subtime()" value="确定">
+		<input class="btn btn-primary" onclick="savelog()"value="保存日志">
+	</form>
+</div>
+<div id="users_log" style="width: 800px; height: 600px;position: fixed;top:25%;margin: auto; overflow-y:auto;border: solid 1px #2898E0;"></div>
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	<script src="static/jeDate/dist/jedate.min.js"></script>
+	<script>
+		var strlog
+		$(document).ready(function () {
+			jeDate('#startTime', {
+				minDate: '1990-01-01',
+				isinitVal: true,
+				format: 'YYYY-MM-DD',
+				onClose: false,
+				donefun: function (obj) {
+					// console.log(obj)
+					var saliDate = obj.val.split("-");
+					// console.log(saliDate)
+					var riNum = 0;
+					var yueNum = 0;
+					var nianNum = saliDate[0];
+					// console.log(saliDate[1]-1)
+					// //判断月 同时判断年
+					if (saliDate[1] - 1 <= 0 && saliDate[2] == "01") {
+						yueNum = 12;
+						riNum = 31;
+						nianNum = nianNum;
+						// console.log(nianNum,yueNum,riNum)
+						$("#endTime").val(nianNum + "-" + yueNum + "-" + riNum)
+						return false;
+					} else {
+						yueNum = saliDate[1];
+						nianNum = nianNum - 0 + 1;
+					}
+					//当 日 是01 的时候要判断当前下一个月是否为31 还是30天  在判断一个是否为闰年  2月份是29 还是28
+					if (saliDate[2] == "01") {
+						switch (saliDate[1] - 1) {
+							case 1:
+							case 3:
+							case 5:
+							case 7:
+							case 8:
+							case 10:
+							case 0://0就是12月  因为是只有点击的是2019-01-01  才会是2018-12-31
+								riNum = 31;
+								yueNum = "0" + (saliDate[1] - 1);
+								break;
+							case 4:
+							case 6:
+							case 9:
+							case 11:
+								riNum = 30;
+								yueNum = "0" + (saliDate[1] - 1);
+								break;
+						}
+						if (saliDate[1] - 1 == 2) {
+							yueNum = "0" + (saliDate[1] - 1);
+							//判断是否为闰年
+							if (isLeap(saliDate[0]) == 1) {
+								riNum = 29;
+							} else {
+								riNum = 28;
+							}
+						}
+					} else {
+						if (saliDate[2] - 1 <= 9) {
+							riNum = "0" + (saliDate[2] - 1);
+						} else {
+							riNum = saliDate[2] - 1;
+						}
+					}
+					$("#endTime").val(nianNum + "-" + yueNum + "-" + riNum)
+					alert("xxxxxxxxx")
+					// console.log(nianNum,yueNum,riNum)
+				}
+			});
+			jeDate('#endTime', {
+				minDate: '1990-01-01',
+				isinitVal: true,
+				format: 'YYYY-MM-DD',
+				onClose: false
+			});
+			//判断是否为闰年  若为闰年，返回1，反之则返回0
+			function isLeap(year) {
+				if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+					return 1;
+				}
+				return 0;
+			}
+		})
+		function subtime() {
+			$("#users_log").html("")
+			$.ajax({
+				//几个参数需要注意一下
+				type: 'GET',//方法类型
+				dataType: 'text',//预期服务器返回的数据类型
+				url: '/userslog/subtime',//url
+				data: $('#form1').serialize(),
+				success: function (result) {
+					$("#users_log").append(result)    
+					var loglist = result.split("<br/>");
+					strlog = loglist.join("");
+				},
+				error: function () {
+					alert("异常！");
+				}
+			});
+		}
+		function fakeClick(obj) {
+			var ev = document.createEvent("MouseEvents");
+			ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+			obj.dispatchEvent(ev);
+		}
+		function savelog() {
+			var urlObject = window.URL || window.webkitURL || window;
+			var export_blob = new Blob([strlog]);
+			var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+			save_link.href = urlObject.createObjectURL(export_blob);
+			save_link.download = "users.log";
+			fakeClick(save_link);
+		}
+	</script>
+{% endblock %}

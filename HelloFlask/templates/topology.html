@@ -1,0 +1,81 @@
+﻿{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="http://demo.qunee.com/lib/qunee-min.js"></script>
+    <script>
+        $(function () {
+
+            var graph = new Q.Graph("canvas");
+
+            $.getJSON('/data-server', function (data) {
+                var json = data;
+                translateToQuneeElements(json, graph);
+            }
+            )
+
+        });
+        function translateToQuneeElements(json, graph) {
+            var map = {};
+            if (json.nodes) {
+                Q.forEach(json.nodes, function (data) {
+                    if (data.addr) {
+                        var node = graph.createNode(data.name + "\n" + data.addr, data.x || 0, data.y || 0);
+                    } else {
+                        var node = graph.createNode(data.name + "\n" + data.id, data.x || 0, data.y || 0);
+                    }
+
+                    if (data.name == 'ovs') {
+                        node.image = 'Q-exchanger2';
+                        node.set("data", data);
+                        map[data.id] = node;
+                    } else {
+                        node.set("data", data);
+                        if (data.stat == 0) {
+                            var label1 = new Q.LabelUI();
+                            label1.rotate = 0;
+                            label1.position = Q.Position.CENTER_MIDDLE;
+                            label1.anchorPosition = Q.Position.CENTER_BOTTOM;
+                            label1.data = "Disconnect";
+                            label1.fontStyle = "bolder";
+                            node.addUI(label1);
+                            var showLabel1 = true;
+                        }
+
+                        
+                        var timer = setInterval(function () {
+                            if (showLabel1) {
+                                node.removeUI(label1);
+                            } else {
+                                node.addUI(label1);
+                            }
+                            showLabel1 = !showLabel1;
+                        }, 1000);
+                        map[data.id] = node;
+                    }
+                });
+            }
+            if (json.edges) {
+                Q.forEach(json.edges, function (data) {
+                    var from = map[data.from];
+                    var to = map[data.to];
+                    if (!from || !to) {
+                        return;
+                    }
+                    if (data.name == "vxlan") {
+                        var edge = graph.createEdge(null, from, to);
+                        edge.setStyle(Q.Styles.EDGE_LINE_DASH, [8, 4, 0.01, 4]);
+                        edge.set("data", data);
+                    }
+                    else {
+                        var edge = graph.createEdge(data.name, from, to);
+                        edge.set("data", data);
+                    }
+                }, graph);
+            }
+        }
+    </script>
+{% endblock %}
+{% block body %}
+    <div id="canvas" style="width: 800px; height: 600px; margin: auto; border: solid 1px #2898E0;"></div>
+{% endblock %}

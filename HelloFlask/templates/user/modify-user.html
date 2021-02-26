@@ -1,0 +1,34 @@
+﻿{% extends "base.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-5">
+        <h2>
+        修改用户信息
+        </h2>
+        <div>
+            <form action="/modify-user" method="post">
+                <div class="form-group">
+                    <label for="password">用户id:</label>
+                    <input type="text"  class="form-control" name="id" readonly value="{{user_id}}">
+                </div>
+                <div class="form-group">
+                    <label for="username">用户名:</label>
+                    <input type="text" class="form-control" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">用户密码:</label>
+                    <input type="text" class="form-control" name="password">
+                </div>
+            
+                <div class="text-right">
+                    <button class="btn btn-primary" type="submit">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-4"></div>
+{% endblock %}
+
+

@@ -1,0 +1,230 @@
+﻿{% extends "base.html" %}
+{% block body %}
+   
+<div class="text-right">
+    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-user" id="addrule">添加规则</button>
+</div>
+<br />
+
+<!-- 添加规则模态框 -->
+<div class="modal fade" id="add-user">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h5 class="modal-title">添加规则</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form  onsubmit="return check();" id="addruleform">
+                    <!-- 距离过期的时间 -->
+                    <div class="form-group">
+                        <label for="idle_timeout">距过期时间:</label>
+                        <input type="text" class="form-control" name="idle_timeout"value="0"id="idle_timeout">
+                    </div>
+                    <!-- 优先级 -->
+                    <div class="form-group">
+                        <label for="priority">优先级:</label>
+                        <input type="text" class="form-control" name="priority" value="100"id="priority">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">协议类型:</label>
+                        <select name="type" class="form-control" >
+                            <option value="all">all</option>
+                            <option value=6>tcp</option>
+                            <option value=17>udp</option>
+                            <option value=1>icmp</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="src_ip">源IP:(例如:192.168.1.1/24)</label>
+                        <input type="text" class="form-control" name="src_ip" value="None" id="src_ip">
+                        <span id="srcNote" style="color:red;display:none;">格式错误</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="dst_ip">目的IP:(例如:192.168.1.1/24)</label>
+                        <input type="text" class="form-control" name="dst_ip" value="None" id="dst_ip">
+                        <span id="dstNote" style="color:red;display:none;">格式错误</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="src_port">源网络端口号:</label>
+                        <input type="text" class="form-control" name="src_port" value="None"id="src_port">
+                    </div>
+                    <div class="form-group">
+                        <label for="dst_port">目的网络端口号:</label>
+                        <input type="text" class="form-control" name="dst_port" value="None"id="dst_port">
+                    </div>
+                    <div class="form-group">
+                        <label for="match_in_port">匹配入端口:</label>
+                        <select name="match_in_port" class="form-control" id="in_port">
+                            <!--<option value="1">1</option>
+                            <option value="2">2</option>-->
+                        </select>
+                    </div>
+
+                    <!-- 动作 -->
+                    <div class="form-group">
+                        <label for="actions_out_port">转发的端口:</label>
+                        <select name="actions_out_port" class="form-control" id="out_port">
+                            <!--<option value="1">1</option>
+                            <option value="2">2</option>-->
+                        </select>
+                    </div>
+
+                    <div class="text-right">
+                        <button id="rulesubmit" class="btn btn-primary">提交</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>存活时间/秒</th>
+            <th>优先级</th>
+            <th>流包数</th>
+            <th>匹配字段</th>
+            <th>动作集</th>
+        </tr>
+    </thead>
+    
+   {% for value in r_flow_entry_list_item %}
+    <tr>
+        <td>{{value['duration_sec']}}</td>
+        <td>{{value['priority']}}</td>
+        <td>{{value['packet_count']}}</td>
+        <td>{{value['match']}}</td>
+        <td>{{value['actions']}}</td>
+        <td>
+            <a href="/deleterule/{{ value }}/" class="btn  btn-sm btn-danger " role="button">删除</a>
+        </td>
+    </tr>
+        {% endfor %}
+    
+</table>
+
+<script type="text/javascript">
+    $('#addrule').one('click',function () {
+        $.ajax({
+            url: '/portvalue',
+            type: 'get',
+            dataType: 'text',
+        }).done(function (data) {
+            data=data.replace("[","")
+            data = data.replace("]", "")
+            $('#in_port').empty()
+            $('#out_port').empty()
+            var list = data.split(",")
+            list.forEach(function (item) {
+                document.getElementById("in_port").options.add(new Option(item, item));
+                document.getElementById("out_port").options.add(new Option(item, item));
+            })
+        }).fail(function () {
+            alert('服务器超时，请重试！');
+        });
+    });
+    $('#rulesubmit').click(function () {
+        $.ajax({
+            url: '/add-rule',
+            type: 'post',
+            data: $(addruleform).serialize(),
+            dataType: 'text',
+            async: false,
+            timeout: 50000,
+        }).done(function (data) {
+            if (data == 'failed') {
+                alert("添加失败！!")
+            }
+            else {
+                alert("添加成功！!")
+            }
+        }).fail(function () {
+            alert('服务器超时，请重试！');
+        });
+    });
+
+    $("#src_ip").bind("blur", function () {
+        
+        var actCode = $(this).val();
+        if (actCode != "None") {
+            var reg = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}(\/(([1-9]|[12][0-9]|3[012])))?$/
+            if (reg.test(actCode))
+            {
+                $("#srcNote").css("display", "none");
+                document.getElementById("rulesubmit").removeAttribute("disabled");
+             }
+            else {
+                $("#srcNote").css("display", "inline-block");
+                document.getElementById("rulesubmit").setAttribute("disabled", true);
+            }            
+        }
+    });
+    $("#dst_ip").bind("blur", function () {
+        var actCode = $(this).val();
+        if (actCode != "None")
+        {
+            var reg = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}(\/(([1-9]|[12][0-9]|3[012])))?$/
+            if (reg.test(actCode))
+            {
+                $("#dstNote").css("display", "none");
+                document.getElementById("rulesubmit").removeAttribute("disabled");
+            }
+            else {
+                $("#dstNote").css("display", "inline-block");
+                document.getElementById("rulesubmit").setAttribute("disabled", true);
+            }
+        }
+    });
+    function check() {
+        var nonetext = 0; 
+        var text = document.getElementById("idle_timeout").value;//通过id获取需要验证的表单元素的值
+        if (text == "") {//当上面获取的值为空时
+            nonetext++
+        }
+        var text = document.getElementById("priority").value;//通过id获取需要验证的表单元素的值
+        if (text == "")
+        {//当上面获取的值为空时
+            nonetext++            
+        }
+        var text = document.getElementById("src_ip").value;//通过id获取需要验证的表单元素的值
+        if (text == "" | "None")
+        {//当上面获取的值为空时
+            nonetext++
+        }
+        var text = document.getElementById("dst_ip").value;//通过id获取需要验证的表单元素的值
+        if (text == "" | "None")
+        {//当上面获取的值为空时
+            nonetext++
+        }
+        var text = document.getElementById("src_port").value;//通过id获取需要验证的表单元素的值
+        if (text == "" | "None")
+        {//当上面获取的值为空时
+            nonetext++
+        }
+        var text = document.getElementById("dst_port").value;//通过id获取需要验证的表单元素的值
+        if (text == "" | "None")
+        {//当上面获取的值为空时
+            nonetext++
+        }
+        if (nonetext > 0)
+        {
+            alert("输入框不能为空！");
+            return false;
+        }
+        else
+            return true;//提交表单
+    };
+
+
+    </script>
+{% endblock %}

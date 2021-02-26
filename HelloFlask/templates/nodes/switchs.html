@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block body %}
+    <br>
+    <table class='table table-striped' style='border:2'>
+        <tr>
+            <td>DPID </td>
+            <td>设备制造商</td>
+            <td>硬件描述</td>
+            <td>软件描述</td>
+        </tr>
+
+
+        {% for key,value in switch_list.items() %}
+        <tr>
+            <td>{{key}}</td>
+
+            <td>{{value.mfr_desc}}</td>
+            <td>{{value.hw_desc}}</td>
+            <td>{{value.sw_desc}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endblock %}
+

@@ -1,0 +1,24 @@
+﻿{% extends "base.html" %}
+{% block body %}
+
+    <table class='table table-striped' style='border:2'>
+        <tr>
+            <td>DPID </td>
+            <td>端口号</td>
+            <td>MAC地址</td>
+            <td>端口名</td>
+        </tr>
+
+        {% for key,value in host_list.items() %}
+            {% for item in value %}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{item.port_no}}</td>
+                <td>{{item.hw_addr}}</td>
+                <td>{{item.name}}</td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+
+    </table>
+{% endblock %}

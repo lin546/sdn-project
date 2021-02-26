@@ -1,0 +1,89 @@
+﻿{% extends "base.html" %}
+{% block body %}
+    <div class="text-right">
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#add-user">添加用户</button>
+    </div>
+    <br />
+    <!-- 添加用户模态框 -->
+    <div class="modal fade" id="add-user">
+        <div class="modal-dialog modal-sm ">
+            <div class="modal-content">
+
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h5 class="modal-title">添加用户</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- 模态框主体 -->
+                <div class="modal-body">
+                    <form action="/add-user" method="post">
+                        <div class="form-group">
+                            <label for="password">用户id:</label>
+                            <input type="text" class="form-control" name="id">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">用户名:</label>
+                            <input type="text" class="form-control" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">用户密码:</label>
+                            <input type="text" class="form-control" name="password">
+                        </div>
+
+                        <div class="text-right">
+                            <button class="btn btn-primary" type="submit">提交</button>
+                            <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <table class='table table-striped' style='border:2'>
+        <tr>
+            <td>用户ID</td>
+            <td>用户名</td>
+            <td>用户密码</td>
+            <td>操作</td>
+
+        </tr>
+        {% for key,value in users.items() %}
+        <tr>
+            <td>{{value.id}}</td>
+            <td>{{value.uname}}</td>
+            <td>{{value.pwd}}</td>
+
+            <td>
+                <a href="{{url_for('bp_user.modify_user_byid',id=value.id)}}" class="btn btn-sm btn-primary " role="button">编辑</a>
+                {% if value.uname != 'root'%}
+                 <a href="/delete/{{ value.uname }}/" class="btn  btn-sm btn-danger " role="button">删除</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#modify-user').click(function () {
+                $.ajax({
+                    url: '/modify-user',
+                    type: 'get',
+                    dataType: 'html',
+                }).done(function (data) {
+                    $("#space").html(data);
+
+                }).fail(function () {
+                    alert('服务器超时，请重试！');
+                });
+            })
+        });
+
+    </script>
+{% endblock %}

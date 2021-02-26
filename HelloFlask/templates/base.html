@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>-->
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script src="http://demo.qunee.com/lib/qunee-min.js"></script>
+
+    <title>index</title>
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <svg t="1602486384444" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4451" width="30" height="30"><path d="M883.2 704l-217.6-89.6c6.4-25.6 12.8-51.2 12.8-76.8 0-32-6.4-57.6-19.2-83.2L768 377.6c6.4-6.4 6.4-12.8 6.4-19.2s-12.8-6.4-19.2-6.4l-108.8 76.8c-32-51.2-83.2-89.6-140.8-102.4l12.8-217.6c0-6.4-6.4-19.2-12.8-19.2s-19.2 6.4-19.2 12.8l-12.8 224h-12.8c-83.2 0-153.6 51.2-192 115.2L121.6 384c-6.4-6.4-19.2 0-19.2 6.4-6.4 6.4 0 19.2 6.4 19.2l153.6 57.6c-6.4 25.6-12.8 44.8-12.8 70.4 0 57.6 19.2 108.8 57.6 147.2l-121.6 121.6c-6.4 6.4-6.4 19.2 0 25.6 6.4 0 19.2 0 25.6-6.4L332.8 704c38.4 32 83.2 44.8 134.4 44.8 83.2 0 147.2-44.8 185.6-108.8l224 89.6c6.4 6.4 19.2 0 19.2-6.4s0-19.2-12.8-19.2z" fill="#5B8FD9" p-id="4452"></path><path d="M940.8 742.4m-83.2 0a83.2 83.2 0 1 0 166.4 0 83.2 83.2 0 1 0-166.4 0Z" fill="#68D279" p-id="4453"></path><path d="M153.6 876.8m-102.4 0a102.4 102.4 0 1 0 204.8 0 102.4 102.4 0 1 0-204.8 0Z" fill="#FE6D68" p-id="4454"></path><path d="M505.6 96m-57.6 0a57.6 57.6 0 1 0 115.2 0 57.6 57.6 0 1 0-115.2 0Z" fill="#5B8FD9" p-id="4455"></path><path d="M96 384m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z" fill="#68D279" p-id="4456"></path><path d="M774.4 352m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z" fill="#F9D65D" p-id="4457"></path></svg>
+            </a>
+    
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/index<{{root}}>">首页 <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="nav justify-content-end">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ session['user_name'] }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/logout">退出登录</a>
+                        <a class="dropdown-item" data-toggle="modal" data-target="#myModal">修改密码</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- 修改密码模态框 -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-sm ">
+                <div class="modal-content">
+    
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">修改密码</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+    
+                    <!-- 模态框主体 -->
+                    <div class="modal-body">
+                        <form action="/modify-pwd" method="post">
+                            <div class="form-group">
+                                <label for="new_pwd">新密码:</label>
+                                <input type="text" class="form-control" name="new_pwd">
+                            </div>                     
+    
+                            <div class="text-right">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                            </div>
+    
+                        </form>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <ul class="nav  flex-column nav-pills bg-light ">
+                    <li class="nav-item">
+                        <b><a class="nav-link" id="users" href="/users">用户管理</a></b>
+                    </li>
+                
+                    <li class="nav-item">
+                        <b><a class="nav-link" data-toggle="collapse" id="nodes" href="#nodes-collapse">网络设备</a></b>
+                        <div id="nodes-collapse" class="collapse">
+                            <a class="nav-link bg-light text-muted" id="switchs" href="/stats/desc"> &nbsp;Switchs</a>
+                            <a class="nav-link bg-light text-muted" id="hosts" href="/stats/portdesc"> &nbsp;Hosts</a>
+                        </div>
+                    </li>
+                
+                    <li class="nav-item">
+                        <b><a class="nav-link" id="topology" href="/topo">网络拓扑</a></b>
+                    </li>
+                    <li class="nav-item">
+                        <b><a class="nav-link" id="monitor" href="/mon">资源监控</a></b>
+                    </li>
+                    <li class="nav-item">
+                        <b><a class="nav-link " id="rules" href="/rule-list">转发规则</a></b>
+                    </li>
+                
+                    <li class="nav-item">
+                        <b><a class="nav-link" data-toggle="collapse" id="log" href="#log-collapse">日志管理</a></b>
+                        <div id="log-collapse" class="collapse">
+                            <a class="nav-link bg-light text-muted" id="deviceslog" href="/device-log"> &nbsp;设备接入</a>
+                            <a class="nav-link bg-light text-muted" id="userslog" href="/user-log"> &nbsp;用户日志</a>
+                            <a class="nav-link bg-light text-muted" id="ruleslog" href="/rule-log"> &nbsp;规则命中</a>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+            <div class="col-md-10" id="space">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script type="text/javascript">
+     if ({{root1}} == 0) {
+             $('#users').hide();
+    }
+
+</script>
