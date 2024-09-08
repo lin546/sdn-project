@@ -4,10 +4,8 @@
  Details.                                                                  
 """
 
-import pymysql,config,requests,json,time
-from jinja2 import TemplateNotFound
 import hashlib
-from flask import Flask,Blueprint,request,session,render_template,url_for,redirect
+from flask import Blueprint,request,session,render_template,url_for,redirect
 from .utils.sqlhelper import sqlHelper
 from HelloFlask import gol
 
@@ -21,7 +19,6 @@ def login():
         username = request.form['name']
         password = request.form['pwd']
         m=hashlib.md5()
-        m.update('username'.encode('utf-8')) 
         m.update(password.encode('utf-8'))
         print(m.hexdigest()) 
         error = None
@@ -105,7 +102,6 @@ def add_user():
             return redirect(url_for('bp_user.user_manager',root1 = session.get('root')))
 
         m=hashlib.md5()
-        m.update('username'.encode('utf-8')) 
         m.update(password.encode('utf-8'))
         sql = "INSERT INTO user (id, uname, pwd, root) VALUES ( %s , %s , %s, 0)"
         args = [id,username,m.hexdigest(),]
@@ -129,7 +125,6 @@ def modify_user():
             return redirect(url_for('bp_user.user_manager',root1 = session.get('root')))
 
         m=hashlib.md5()
-        m.update('username'.encode('utf-8')) 
         m.update(password.encode('utf-8'))
         sql = "UPDATE user SET uname = %s , pwd = %s WHERE id = %s"
         args = [username,m.hexdigest(),id]
