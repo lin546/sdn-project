@@ -9,7 +9,7 @@ import json,time,psutil,os
 from flask import *
 from .utils.sqlhelper import sqlHelper
 
-from HelloFlask import app
+from sdn_simulate import app
 
 # 定义蓝图
 

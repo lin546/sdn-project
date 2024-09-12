@@ -5,8 +5,8 @@
 """
 
 import requests,json
-from HelloFlask import gol
-from HelloFlask import app
+from sdn_simulate import gol
+from sdn_simulate import app
 from flask import Blueprint,render_template
 
 

@@ -3,30 +3,26 @@
  @brief    本文件用与初始化系统，并建立与业务服务器端的通信                                                
  Details.                                                                  
 """
-
-import gevent
+import socket
+from flask import Flask
 from gevent import monkey
 monkey.patch_all()
-
-from flask import Flask
 import logging
 from logging.handlers import TimedRotatingFileHandler
-app = Flask(__name__)
-from HelloFlask import gol
-import socket
+from sdn_simulate import gol
 from threading import Thread,Lock
 import time
-from HelloFlask import views
 
 # 引入蓝图
-from HelloFlask.user import bp_user
-from HelloFlask.topology import bp_topology
-from HelloFlask.monitor import bp_monitor
-from HelloFlask.rule import bp_rule
-from HelloFlask.nodes import bp_nodes
-from HelloFlask.log import bp_log
+from sdn_simulate.user import bp_user
+from sdn_simulate.topology import bp_topology
+from sdn_simulate.monitor import bp_monitor
+from sdn_simulate.rule import bp_rule
+from sdn_simulate.nodes import bp_nodes
+from sdn_simulate.log import bp_log
 
 # 引入配置文件
+app = Flask(__name__)
 app.config.from_pyfile('config/settings.cfg')
 
 # 注册蓝图

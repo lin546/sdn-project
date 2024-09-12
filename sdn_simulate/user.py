@@ -7,7 +7,7 @@
 import hashlib
 from flask import Blueprint,request,session,render_template,url_for,redirect
 from .utils.sqlhelper import sqlHelper
-from HelloFlask import gol
+from sdn_simulate import gol
 
 # 定义蓝图
 bp_user = Blueprint('bp_user', __name__,template_folder='templates',static_folder='static')

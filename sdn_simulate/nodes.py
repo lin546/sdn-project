@@ -7,8 +7,8 @@
 import requests,json
 from flask import *
 
-from HelloFlask import app
-from HelloFlask import gol
+from sdn_simulate import app
+from sdn_simulate import gol
 
 # 定义蓝图
 bp_nodes = Blueprint('bp_nodes', __name__,template_folder='templates')

@@ -8,8 +8,8 @@ import requests,json
 import hashlib
 from flask import *
 from .utils.sqlhelper import sqlHelper
-from HelloFlask import app
-from HelloFlask import gol
+from sdn_simulate import app
+from sdn_simulate import gol
 
 # 定义蓝图
 bp_rule = Blueprint('bp_rule', __name__,template_folder='templates')
@@ -31,7 +31,7 @@ def rule_list():
 
 
 
-    file = open("./HelloFlask/static/log/rules.log", 'w').close()
+    file = open("./sdn_simulate/static/log/rules.log", 'w').close()
 
     for item in flow_entry:
          #读取ovs的流表
