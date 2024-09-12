@@ -1,7 +1,5 @@
 import logging
-import pymysql,config,requests,json,time
 
-from HelloFlask import app
 def _init():
     global devices_stats
     global dpid

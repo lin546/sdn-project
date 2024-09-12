@@ -4,13 +4,11 @@
  Details.                                                                  
 """
 
-import pymysql,config,requests,json,time
-from jinja2 import TemplateNotFound
+import requests,json
 import hashlib
 from flask import *
 from .utils.sqlhelper import sqlHelper
 from HelloFlask import app
-from HelloFlask import nodes
 from HelloFlask import gol
 
 # 定义蓝图

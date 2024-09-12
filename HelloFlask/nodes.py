@@ -64,5 +64,3 @@ def get_stats_port():
     for dict in hostList:
         gol.host_port.append(dict['port_no'])
     return str(gol.host_port)
-
-

@@ -5,13 +5,8 @@
  Details.                                                                  
 """
 
-import pymysql,config,requests,json,time
-import logging
-import os.path
-from jinja2 import TemplateNotFound
-
+import time
 from flask import *
-from .utils.sqlhelper import sqlHelper
 
 # 定义蓝图
 bp_log = Blueprint('bp_log', __name__,template_folder='templates')

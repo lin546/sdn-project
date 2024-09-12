@@ -4,12 +4,10 @@
  Details.                                                                  
 """
 
-import pymysql,config,requests,json,time
-from jinja2 import TemplateNotFound
+import requests,json
 from HelloFlask import gol
 from HelloFlask import app
 from flask import Blueprint,render_template
-from .utils.sqlhelper import sqlHelper
 
 
 # 定义蓝图

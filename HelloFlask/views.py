@@ -4,10 +4,7 @@
  Details.                                                                  
 """
 
-import pymysql,config,psutil,requests,json,time
-
 from flask import *
-from .utils.sqlhelper import sqlHelper
 from HelloFlask import app,gol
 
 @app.route('/')
