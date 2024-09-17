@@ -51,15 +51,15 @@ def login():
             session.clear()
             session['user_name'] = user[0]
             session['root'] = user[1]
-            #return redirect(url_for('index'))
-            return redirect(url_for('index',root1 = user[1]))
+            return redirect(url_for('bp_index.index'))
+        gol.userslog.info("用户登陆！！")
     return render_template('index.html')
  
 #用户登出
 @bp_user.route('/logout')
 def logout():
     session.clear()
-    gol.userslog.info("用户退出登录！！！！")
+    gol.userslog.info("用户退出登录！！")
     return redirect(url_for('bp_user.login'))
 
 
