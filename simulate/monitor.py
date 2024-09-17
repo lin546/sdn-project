@@ -10,9 +10,7 @@ from flask import *
 from .utils.sqlhelper import sqlHelper
 
 # 定义蓝图
-
 bp_monitor = Blueprint('bp_monitor', __name__,template_folder='templates')
-
 
 #资源监控页面
 @bp_monitor.route('/mon')

@@ -4,17 +4,16 @@
  Details.                                                                  
 """
 import pymysql
-
+from flask import current_app
 
 class sqlHelper(object):
 
     @staticmethod
     def open():
-        from simulate import app
-        host = app.config.get("HOST")
-        uname = app.config.get("USER")
-        pwd = app.config.get("PWD")
-        database = app.config.get("DB")
+        host = current_app.config['HOST']
+        uname = current_app.config['USER']
+        pwd = current_app.config['PWD']
+        database = current_app.config['DB']
         conn = pymysql.connect(host, uname, pwd, database)
         cursor = conn.cursor()
         return conn,cursor

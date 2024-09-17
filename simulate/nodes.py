@@ -6,7 +6,6 @@
 
 import requests,json
 from flask import *
-
 from simulate import gol
 
 # 定义蓝图

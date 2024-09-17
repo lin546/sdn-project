@@ -5,13 +5,34 @@
 """
 
 import hashlib
-from flask import Blueprint,request,session,render_template,url_for,redirect
+from flask import Blueprint,request,session,render_template,url_for,redirect,g
 from .utils.sqlhelper import sqlHelper
 from simulate import gol
 
 # 定义蓝图
 bp_user = Blueprint('bp_user', __name__,template_folder='templates',static_folder='static')
 user_dict = {}
+#用户注册
+@bp.route('/register', methods=('GET', 'POST'))
+def register():
+    if request.method == 'POST':
+        username = request.form['name']
+        password = request.form['pwd']
+        error = None
+        if not username:
+            error = 'Username is required.'
+        elif not password:
+            error = 'Password is required.'
+        if error is None:
+                m=hashlib.md5()
+                m.update(password.encode('utf-8'))
+                sql = "INSERT INTO user (uname, pwd) VALUES %s,%s"
+                args = [username,m.hexdigest(),]        
+                sqlHelper.add(sql,args)
+        else:
+            return redirect(url_for("bp_user.login"))
+    return render_template('auth/register.html')
+
 #用户登录
 @bp_user.route('/login', methods=('GET','POST'))
 def login():
@@ -20,12 +41,11 @@ def login():
         password = request.form['pwd']
         m=hashlib.md5()
         m.update(password.encode('utf-8'))
-        print(m.hexdigest()) 
         error = None
         sql = "SELECT uname,root FROM user WHERE uname = %s and pwd = %s"
         args = [username,m.hexdigest(),]        
         user = sqlHelper.fetch_one(sql,args)
-        if  user is None:
+        if user is None:
             error = 'name or pwd error ！'
         if error is None:
             session.clear()
@@ -139,3 +159,13 @@ def modify_user_byid(id):
         print("id:"+id)
         gol.userslog.info("修改用户:"+id)
         return render_template("user/modify-user.html",user_id = id)
+
+@bp_user.before_app_request
+def load_logged_in_user():
+    user_name = session.get('user_name')
+    if user_name is None:
+        g.user = None
+    else:
+        sql =  'SELECT * FROM user WHERE id = %s'
+        args = [user_name,]        
+        sqlHelper.fetch_one(sql,args)
