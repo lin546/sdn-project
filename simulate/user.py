@@ -29,8 +29,8 @@ def register():
                 sql = "INSERT INTO user (uname, pwd) VALUES %s,%s"
                 args = [username,m.hexdigest(),]        
                 sqlHelper.add(sql,args)
-        else:
-            return redirect(url_for("bp_user.login"))
+                return redirect(url_for("bp_user.login"))
+        gol.userslog.info("用户注册！！")
     return render_template('auth/register.html')
 
 #用户登录
