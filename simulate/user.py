@@ -7,7 +7,7 @@
 import hashlib
 from flask import Blueprint,request,session,render_template,url_for,redirect
 from .utils.sqlhelper import sqlHelper
-from sdn_simulate import gol
+from simulate import gol
 
 # 定义蓝图
 bp_user = Blueprint('bp_user', __name__,template_folder='templates',static_folder='static')
@@ -33,7 +33,7 @@ def login():
             session['root'] = user[1]
             #return redirect(url_for('index'))
             return redirect(url_for('index',root1 = user[1]))
-    return render_template('user/login.html')
+    return render_template('index.html')
  
 #用户登出
 @bp_user.route('/logout')

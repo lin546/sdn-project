@@ -21,7 +21,7 @@ def user_log():
 def users_subtime():
     starttime = request.args.get("start")
     endtime = request.args.get("end") 
-    file = "./sdn_simulate/static/log/users.log"
+    file = "./simulate/static/log/users.log"
     t9 = time.strptime(starttime, '%Y-%m-%d')
     t11 = time.strptime(endtime, '%Y-%m-%d')
     data=''
@@ -41,7 +41,7 @@ def device_log():
 def devices_subtime():
     starttime = request.args.get("start")
     endtime = request.args.get("end") 
-    file = './sdn_simulate/static/log/devices.log'
+    file = './simulate/static/log/devices.log'
     t9 = time.strptime(starttime, '%Y-%m-%d')
     t11 = time.strptime(endtime, '%Y-%m-%d')
     data=''
@@ -61,7 +61,7 @@ def rule_log():
 def rules_subtime():
     starttime = request.args.get("start")
     endtime = request.args.get("end") 
-    file = './sdn_simulate/static/log/rules.log'
+    file = './simulate/static/log/rules.log'
     t9 = time.strptime(starttime, '%Y-%m-%d')
     t11 = time.strptime(endtime, '%Y-%m-%d')
     data=''

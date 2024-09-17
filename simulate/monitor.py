@@ -9,8 +9,6 @@ import json,time,psutil,os
 from flask import *
 from .utils.sqlhelper import sqlHelper
 
-from sdn_simulate import app
-
 # 定义蓝图
 
 bp_monitor = Blueprint('bp_monitor', __name__,template_folder='templates')
@@ -78,6 +76,7 @@ def sys_stop():
 # 启动交换机运行
 @bp_monitor.route('/sys/start')
 def sys_start():
+    from simulate import app
     remote_ip = app.config.get("IP")
     url = remote_ip+"/stats/flowentry/add"
     os.system("gnome-terminal -e 'bash -c \"~/start.sh\"'")

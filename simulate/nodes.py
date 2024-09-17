@@ -7,8 +7,7 @@
 import requests,json
 from flask import *
 
-from sdn_simulate import app
-from sdn_simulate import gol
+from simulate import gol
 
 # 定义蓝图
 bp_nodes = Blueprint('bp_nodes', __name__,template_folder='templates')
@@ -16,6 +15,7 @@ bp_nodes = Blueprint('bp_nodes', __name__,template_folder='templates')
 
 # 获取OVS交换机DPID
 def get_dpid():
+    from simulate import app
     remote_ip = app.config.get("IP")
     url = url = remote_ip+"/stats/switches"
     headers = {'user-agent': 'vscode-restclient'}
@@ -29,6 +29,7 @@ def get_dpid():
 # 获取交换机信息
 @bp_nodes.route('/stats/desc')
 def get_stats_desc():
+    from simulate import app
     remote_ip = app.config.get("IP")
     gol.dpid = get_dpid()
     url = remote_ip+"/stats/desc/"+gol.dpid
@@ -40,6 +41,7 @@ def get_stats_desc():
 # 获取交换机端口信息
 @bp_nodes.route('/stats/portdesc/')
 def get_stats_portdesc():
+    from simulate import app
     remote_ip = app.config.get("IP")
     gol.dpid = get_dpid()
     url = remote_ip+"/stats/portdesc/"+gol.dpid
@@ -51,6 +53,7 @@ def get_stats_portdesc():
 #获取主机的端口号
 @bp_nodes.route('/portvalue')
 def get_stats_port():
+    from simulate import app
     remote_ip = app.config.get("IP")
     gol.dpid = get_dpid()
     url = remote_ip+"/stats/portdesc/"+gol.dpid

@@ -3,8 +3,8 @@ import logging
 def _init():
     global devices_stats
     global dpid
-    dpid = '52241002294'
-    devices_stats={"vxlan0":1,"vxlan11":1}  #表示设备状态，1为在线，0为离线
+    dpid = '1'
+    devices_stats={"vxlan":1,"vxlan11":1}  #表示设备状态，1为在线，0为离线
     # setup_logger('userslog', r'.\static\log\users.log')
     # setup_logger('ruleslog', r'.\static\log\rules.log')
     # setup_logger('deviceslog', r'.\static\log\devices.log')

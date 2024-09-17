@@ -5,10 +5,10 @@
 """
 
 import requests,json
-from sdn_simulate import gol
-from sdn_simulate import app
+from simulate import gol
 from flask import Blueprint,render_template
 
+dpid = '1'
 
 # 定义蓝图
 bp_topology = Blueprint('bp_topology', __name__,template_folder='templates')
@@ -22,10 +22,10 @@ def topology():
 #接收前端发来的生成拓扑图的请求，向ryu控制器请求节点信息，将请求到的信息处理后返回给前端
 @bp_topology.route('/data-server')
 def data():
+       from simulate import app
        remote_ip = app.config.get("IP")
        #url=remote_ip+"/stats/portdesc/223073848056654"
-       req=requests.get(remote_ip+"/stats/portdesc/"+gol.dpid, timeout=(3,20))
-       #result = json.loads(req.text)
+       req=requests.get(remote_ip+"/stats/portdesc/"+ dpid, timeout=(3,20))
        load_dict = json.loads(req.text)  #请求后的json数据转为字典
 
        ovsList=list(load_dict.keys())    
@@ -35,7 +35,7 @@ def data():
        edgesList=[]    #定义拓扑图的边列表
 
        nodeCount = 0  #主机节点个数
-       count = 0      #总结点个数
+       count = 2      #总结点个数
        serCount = 0   #服务器节点个数
 
        for dictMsg in load_dict[ovsID]:
@@ -44,18 +44,18 @@ def data():
           if "vxlan" in dictMsg['name']:
               if gol.devices_stats[dictMsg['name']]==0:
                 gol.deviceslog.info(dictMsg['name']+"断开连接！！！！！！")
-                nodeDict={'name':dictMsg['name'],'x':150*serCount-200,'y':-100,'id':count+1,'addr':dictMsg['hw_addr'],'stat':0}
-                edgeDict={'name':'vxlan','from':ovsID,'to':count+1}
+                nodeDict={'name':dictMsg['name'],'x':150*serCount-200,'y':-100,'id':count,'addr':dictMsg['hw_addr'],'stat':0}
+                edgeDict={'name':'vxlan','from':ovsID,'to':count}
               else:
                 gol.deviceslog.info(dictMsg['name']+"已连接！！！！！！")
-                nodeDict={'name':dictMsg['name'],'x':150*serCount-200,'y':-100,'id':count+1,'addr':dictMsg['hw_addr'],'stat':1}
-                edgeDict={'name':'vxlan','from':ovsID,'to':count+1}
+                nodeDict={'name':dictMsg['name'],'x':150*serCount-200,'y':-100,'id':count,'addr':dictMsg['hw_addr'],'stat':1}
+                edgeDict={'name':'vxlan','from':ovsID,'to':count}
               serCount=serCount+1
           else:
-              nodeDict={'name':dictMsg['name'],'x':150*nodeCount-200,'y':100,'id':count+1,'addr':dictMsg['hw_addr']}
-              edgeDict={'name':None,'from':ovsID,'to':count+1}
+              nodeDict={'name':dictMsg['name'],'x':150*nodeCount-200,'y':100,'id':count,'addr':dictMsg['hw_addr']}
+              edgeDict={'name':None,'from':ovsID,'to':count}
               nodeCount=nodeCount+1
-          count=count+1
+              count=count+1
           nodesList.append(nodeDict)
           edgesList.append(edgeDict)
        portDict={'nodes':nodesList,'edges':edgesList}

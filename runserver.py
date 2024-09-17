@@ -5,16 +5,11 @@
 """
 
 
-import os
-from sdn_simulate import app
+from simulate import app
 
 if __name__ == '__main__':
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '5555'))
-    except ValueError:
-        PORT = 5555
+    HOST = '127.0.0.1'
+    PORT = 5555
 
     app.run(HOST, PORT)
 

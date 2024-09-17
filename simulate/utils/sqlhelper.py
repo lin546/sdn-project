@@ -4,13 +4,13 @@
  Details.                                                                  
 """
 import pymysql
-from sdn_simulate import app
 
 
 class sqlHelper(object):
 
     @staticmethod
     def open():
+        from simulate import app
         host = app.config.get("HOST")
         uname = app.config.get("USER")
         pwd = app.config.get("PWD")
@@ -34,7 +34,6 @@ class sqlHelper(object):
 
     @staticmethod
     def fetch_one(sql,args):
-
         conn,cursor = sqlHelper.open()
         cursor.execute(sql,args)
         obj =  cursor.fetchone()
@@ -43,7 +42,6 @@ class sqlHelper(object):
     
     @staticmethod
     def fetch_all(sql,args):
-        
         conn,cursor = sqlHelper.open()
         cursor.execute(sql,args)
         obj =  cursor.fetchall()
@@ -53,6 +51,7 @@ class sqlHelper(object):
 
     @staticmethod
     def update(sql,args):
+        from sqlinit import db
         conn,cursor = sqlHelper.open()
         rowcount = cursor.execute(sql,args)
         sqlHelper.close(conn,cursor)
@@ -60,6 +59,7 @@ class sqlHelper(object):
     
     @staticmethod
     def delete(sql,args):
+        from sqlinit import db
         conn,cursor = sqlHelper.open()
         rowcount = cursor.execute(sql,args)
         sqlHelper.close(conn,cursor)

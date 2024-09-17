@@ -5,13 +5,13 @@
 """
 
 from flask import *
-from sdn_simulate import app,gol
+from simulate import app,gol
 
 @app.route('/')
 def hello_world():
     return render_template('user/login.html') #用户登录页面
 
-@app.route("/index<root1>")
+@app.route("/index")
 def index(root1):
     if not session.get("user_name"):
       return redirect("/login")

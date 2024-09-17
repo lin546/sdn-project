@@ -8,8 +8,7 @@ import requests,json
 import hashlib
 from flask import *
 from .utils.sqlhelper import sqlHelper
-from sdn_simulate import app
-from sdn_simulate import gol
+from simulate import gol
 
 # 定义蓝图
 bp_rule = Blueprint('bp_rule', __name__,template_folder='templates')
@@ -17,6 +16,7 @@ bp_rule = Blueprint('bp_rule', __name__,template_folder='templates')
 
 @bp_rule.route('/rule-list')
 def rule_list():
+    from . import app
     remote_ip = app.config.get("IP")
     #dpid = nodes.get_dpid()
     url = remote_ip+"/stats/flow/"+gol.dpid
@@ -31,26 +31,28 @@ def rule_list():
 
 
 
-    file = open("./sdn_simulate/static/log/rules.log", 'w').close()
+    file = open("./simulate/static/log/rules.log", 'w').close()
 
     for item in flow_entry:
+       matchDict={}
+       actionsList=[]
+       actionsDict={}
+
          #读取ovs的流表
        flow_entry_dict_item['dpid'] = gol.dpid
        flow_entry_dict_item['priority'] = item['priority']
        flow_entry_dict_item['idle_timeout'] = item['idle_timeout']
        flow_entry_dict_item['match'] = item['match']
        flow_entry_dict_item['actions'] = item['actions']
-       #flow_entry_dict_item['match_in_port'] = item['match']['in_port']
-       #flow_entry_dict_item['out_port'] = item['actions'][0]
+       if item['match']:
+            flow_entry_dict_item['match_in_port'] = item['match']['in_port']
+       flow_entry_dict_item['out_port'] = item['actions'][0]
        flow_entry_dict_item['packet_count'] = item['packet_count']
        flow_entry_dict_item['duration_sec'] = item['duration_sec']
        new_dict = flow_entry_dict_item.copy()
        flow_entry_list_item.append(new_dict)
 
-         #将流表插入数据库
-       matchDict={}
-       actionsList=[]
-       actionsDict={}
+       #将流表插入数据库
        priority = item['priority']
        idle_timeout = item['idle_timeout']
        matchDict = item['match']
@@ -82,6 +84,7 @@ def rule_list():
 @bp_rule.route('/add-rule', methods=('GET','POST'))
 def add_rule():
     if request.method == 'POST':
+        from simulate import app
         remote_ip = app.config.get("IP")
         url = remote_ip+"/stats/flowentry/add"
         matchDict={}
