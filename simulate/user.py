@@ -26,12 +26,12 @@ def register():
         if error is None:
                 m=hashlib.md5()
                 m.update(password.encode('utf-8'))
-                sql = "INSERT INTO user (uname, pwd) VALUES %s,%s"
+                sql = "INSERT INTO user (uname, pwd) VALUES (%s,%s)"
                 args = [username,m.hexdigest(),]        
                 sqlHelper.add(sql,args)
                 return redirect(url_for("bp_user.login"))
         gol.userslog.info("用户注册！！")
-    return render_template('auth/register.html')
+    return render_template('user/register.html')
 
 #用户登录
 @bp_user.route('/login', methods=('GET','POST'))
