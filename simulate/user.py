@@ -13,7 +13,7 @@ from simulate import gol
 bp_user = Blueprint('bp_user', __name__,template_folder='templates',static_folder='static')
 user_dict = {}
 #用户注册
-@bp.route('/register', methods=('GET', 'POST'))
+@bp_user.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
         username = request.form['name']
