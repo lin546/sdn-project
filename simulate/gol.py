@@ -2,6 +2,8 @@ import logging
 
 def _init():
     global devices_stats
+    global host_port
+    host_port = []
     global dpid
     dpid = '1'
     devices_stats={"vxlan":1,"vxlan11":1}  #表示设备状态，1为在线，0为离线

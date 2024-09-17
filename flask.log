@@ -484,3 +484,71 @@ Traceback (most recent call last):
   File "/Users/layne/WorkSpace/sdn-project/simulate/nodes.py", line 68, in get_stats_port
     gol.host_port.append(dict['port_no'])
 AttributeError: module 'simulate.gol' has no attribute 'host_port'
+[2024-09-17 11:51:59,935][app.py:1891][ERROR][123145498009600] - Exception on /portvalue [GET]
+Traceback (most recent call last):
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/layne/WorkSpace/sdn-project/simulate/nodes.py", line 68, in get_stats_port
+    gol.host_port.append(dict['port_no'])
+AttributeError: module 'simulate.gol' has no attribute 'host_port'
+[2024-09-17 11:55:31,354][app.py:1891][ERROR][123145415933952] - Exception on /portvalue [GET]
+Traceback (most recent call last):
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/layne/WorkSpace/sdn-project/simulate/nodes.py", line 66, in get_stats_port
+    gol.host_port.append(dict['port_no'])
+AttributeError: module 'simulate.gol' has no attribute 'host_port'
+[2024-09-17 11:56:21,073][app.py:1891][ERROR][123145433260032] - Exception on /portvalue [GET]
+Traceback (most recent call last):
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/layne/WorkSpace/sdn-project/simulate/nodes.py", line 66, in get_stats_port
+    gol.host_port.append(dict['port_no'])
+AttributeError: module 'simulate.gol' has no attribute 'host_port'
+[2024-09-17 11:59:21,561][app.py:1891][ERROR][123145519550464] - Exception on /portvalue [GET]
+Traceback (most recent call last):
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/layne/WorkSpace/sdn-project/.venv/lib/python3.9/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/layne/WorkSpace/sdn-project/simulate/nodes.py", line 66, in get_stats_port
+    gol.host_port.append(dict['port_no'])
+AttributeError: module 'simulate.gol' has no attribute 'host_port'

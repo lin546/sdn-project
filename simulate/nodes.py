@@ -61,8 +61,6 @@ def get_stats_port():
     response = requests.request("GET", url, headers=headers)
     json_data = json.loads(response.text)   
     #host_value = json.dumps(json_data)
-    print(type(json_data))
-    hostList = []
     hostList = json_data[gol.dpid]
     for dict in hostList:
         gol.host_port.append(dict['port_no'])
