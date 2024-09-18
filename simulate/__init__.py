@@ -40,46 +40,46 @@ app.logger.addHandler(handler)
 handler.setFormatter(formatter)
 
 # 接受业务服务器的消息
-# def Recieve():
-#         address = ('82.157.0.86', 1241)
-#         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#         s.bind(address)
-#         while True:
-#            data, addr = s.recvfrom(2048)
-#            if not data:
-#                 print("client has exist")
-#                 break
-#            data = data.decode()
-#            print( "received:", data, "from", addr)
-#            if data in devices_stats_count.keys():
-#              lock.acquire()
-#              devices_stats_count[data] = 0
-#              gol.devices_stats[data] = 1
-#              lock.release()
-#         s.close()
+def Recieve():
+        address = ('82.157.0.86', 1241)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.bind(address)
+        while True:
+           data, addr = s.recvfrom(2048)
+           if not data:
+                print("client has exist")
+                break
+           data = data.decode()
+           print( "received:", data, "from", addr)
+           if data in devices_stats_count.keys():
+             lock.acquire()
+             devices_stats_count[data] = 0
+             gol.devices_stats[data] = 1
+             lock.release()
+        s.close()
 
-# # #对主机断开连接时间进行计算，超过15秒没有应答，即为断开连接
-# def Count():
-#     while True:
-#         for key in devices_stats_count:
-#             lock.acquire()
-#             devices_stats_count[key] += 1
-#             lock.release()   
-#             #print(devices_stats_count[key])
-#             if devices_stats_count[key] > 15:
-#                 #print(key,"断开连接！！！！！！！")
-#                 lock.acquire()
-#                 gol.devices_stats[key] = 0
-#                 lock.release()   
-#             time.sleep(1)
+# #对主机断开连接时间进行计算，超过15秒没有应答，即为断开连接
+def Count():
+    while True:
+        for key in devices_stats_count:
+            lock.acquire()
+            devices_stats_count[key] += 1
+            lock.release()   
+            #print(devices_stats_count[key])
+            if devices_stats_count[key] > 15:
+                #print(key,"断开连接！！！！！！！")
+                lock.acquire()
+                gol.devices_stats[key] = 0
+                lock.release()   
+            time.sleep(1)
 
 gol._init()
 # 网络设备计数，value大于15默认为断开连接   
 devices_stats_count={"vxlan0":0,"vxlan11":0}
-# lock = Lock()
-# t1 = Thread(target=Count)
-# t2 = Thread(target=Recieve)
-# t1.start()
-# t2.start() 
+lock = Lock()
+t1 = Thread(target=Count)
+t2 = Thread(target=Recieve)
+t1.start()
+t2.start() 
 
 
