@@ -51,6 +51,7 @@ def data():
                 nodeDict={'name':dictMsg['name'],'x':150*serCount-200,'y':-100,'id':count,'addr':dictMsg['hw_addr'],'stat':1}
                 edgeDict={'name':'vxlan','from':ovsID,'to':count}
               serCount=serCount+1
+              count=count+1
           else:
               nodeDict={'name':dictMsg['name'],'x':150*nodeCount-200,'y':100,'id':count,'addr':dictMsg['hw_addr']}
               edgeDict={'name':None,'from':ovsID,'to':count}
